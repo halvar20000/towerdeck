@@ -1,4 +1,4 @@
-package io.github.halvar20000.towerdeck
+package com.towerdeck.com
 
 import io.flutter.embedding.android.FlutterActivity
 

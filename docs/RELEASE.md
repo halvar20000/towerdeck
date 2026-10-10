@@ -2,10 +2,10 @@
 
 ## Before the first release
 
-1. **Choose the final name.** "TowerDeck" is a working title. Check that it is free in both stores and as a GitHub repo. Do not put "Unraid" in the app name: it is a Lime Technology trademark. A subtitle such as "for Unraid servers" is the usual way to mention it.
-2. **App ID:** `io.github.halvar20000.towerdeck`, set in `android/app/build.gradle.kts` and as the iOS bundle ID in Xcode. It can't be changed after the first store upload.
+1. **Name:** "TowerDeck". Do not put "Unraid" in the app name: it is a Lime Technology trademark. A subtitle such as "for Unraid servers" is the usual way to mention it.
+2. **App ID:** Android uses `com.towerdeck.com`, registered in the Play Console (`android/app/build.gradle.kts`). The iOS bundle ID is still `io.github.halvar20000.towerdeck`; whoever publishes on iOS sets the final one in Xcode. Neither ID can be changed after the first store upload.
 3. **App icon:** add `flutter_launcher_icons` and a 1024×1024 PNG.
-4. **GitHub repo:** create it, push the code, and update `sourceCodeUrl` in `lib/features/settings/settings_screen.dart`.
+4. **GitHub repo:** https://github.com/halvar20000/towerdeck (`sourceCodeUrl` in `lib/features/settings/settings_screen.dart`).
 5. **Privacy policy URL** (both stores require one). The app collects no data, contains no tracking, and talks only to the user's own server. A short page on GitHub Pages is enough.
 
 ## Android (Google Play)
