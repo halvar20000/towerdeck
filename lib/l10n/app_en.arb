@@ -1,0 +1,235 @@
+{
+  "@@locale": "en",
+  "appTitle": "TowerDeck",
+  "navDashboard": "Overview",
+  "navDocker": "Docker",
+  "navVms": "VMs",
+  "navStorage": "Storage",
+  "navNotifications": "Alerts",
+  "retry": "Retry",
+  "cancel": "Cancel",
+  "confirm": "Confirm",
+  "save": "Save",
+  "delete": "Delete",
+  "search": "Search",
+  "settings": "Settings",
+  "servers": "Servers",
+  "readOnlyBanner": "Read-only API key – actions are disabled.",
+  "errorLoading": "Could not load data",
+  "errorUnauthorized": "The API key was rejected. Reconnect the server.",
+  "errorForbidden": "This API key is not allowed to do that.",
+  "errorNetwork": "Server not reachable. Are you in the right network or VPN?",
+  "errorTls": "Secure connection failed. The certificate may have changed.",
+  "actionDone": "Done",
+  "actionFailed": "Failed: {message}",
+  "@actionFailed": {
+    "placeholders": {
+      "message": {
+        "type": "String"
+      }
+    }
+  },
+  "welcomeTitle": "Manage your Unraid server",
+  "welcomeBody": "Requires Unraid 7.2 or newer (or the Unraid Connect plugin on older versions).",
+  "addServer": "Add server",
+  "editServer": "Edit server",
+  "serverAddress": "Server address",
+  "serverAddressHint": "e.g. 192.168.1.10 or https://tower.local",
+  "serverAddressInvalid": "Enter a valid address",
+  "serverName": "Display name (optional)",
+  "apiKey": "API key",
+  "apiKeyHelp": "Create one in the WebGUI under Settings → Management Access → API Keys, or with: unraid-api apikey --create",
+  "connectWithWebGui": "Sign in via WebGUI",
+  "connectWithWebGuiHelp": "Log in to your server and approve access – the key is created automatically.",
+  "orEnterKey": "or paste an existing API key",
+  "accessLevel": "Access",
+  "accessFull": "Full control",
+  "accessReadOnly": "Read only",
+  "allowSelfSigned": "Accept self-signed certificate",
+  "allowSelfSignedHelp": "The certificate is pinned on first connect.",
+  "testAndSave": "Connect",
+  "connecting": "Connecting…",
+  "connectedTo": "Connected to {host}",
+  "@connectedTo": {
+    "placeholders": {
+      "host": {
+        "type": "String"
+      }
+    }
+  },
+  "switchedToHttps": "Server uses HTTPS – address updated.",
+  "removeServer": "Remove server",
+  "removeServerConfirm": "Remove {name} from this device?",
+  "@removeServerConfirm": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "authorizeTitle": "Approve access",
+  "uptime": "Uptime",
+  "cpu": "CPU",
+  "memory": "Memory",
+  "array": "Array",
+  "arrayStarted": "Started",
+  "arrayStopped": "Stopped",
+  "containersSummary": "{running} of {total} running",
+  "@containersSummary": {
+    "placeholders": {
+      "running": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "updatesAvailable": "{count, plural, =1{1 update available} other{{count} updates available}}",
+  "@updatesAvailable": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "unreadSummary": "{count} unread",
+  "@unreadSummary": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "parity": "Parity",
+  "parityRunning": "Parity check running – {progress} %",
+  "@parityRunning": {
+    "placeholders": {
+      "progress": {
+        "type": "int"
+      }
+    }
+  },
+  "parityPaused": "Parity check paused – {progress} %",
+  "@parityPaused": {
+    "placeholders": {
+      "progress": {
+        "type": "int"
+      }
+    }
+  },
+  "parityLast": "Last check: {date}",
+  "@parityLast": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "parityNever": "Never checked",
+  "parityErrors": "{count} errors",
+  "@parityErrors": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "used": "{used} of {size} used",
+  "@used": {
+    "placeholders": {
+      "used": {
+        "type": "String"
+      },
+      "size": {
+        "type": "String"
+      }
+    }
+  },
+  "dockerEmpty": "No containers",
+  "start": "Start",
+  "stop": "Stop",
+  "restart": "Restart",
+  "pause": "Pause",
+  "resume": "Resume",
+  "update": "Update",
+  "updateAll": "Update all",
+  "updateAllConfirm": "Update all containers with available updates?",
+  "openWebUi": "Open WebUI",
+  "logs": "Logs",
+  "logsEmpty": "No log output",
+  "ports": "Ports",
+  "image": "Image",
+  "autostart": "Autostart",
+  "updateAvailable": "Update available",
+  "filterAll": "All",
+  "filterRunning": "Running",
+  "filterStopped": "Stopped",
+  "stopConfirm": "Stop {name}?",
+  "@stopConfirm": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "vmsEmpty": "No virtual machines (or VM service disabled)",
+  "forceStop": "Force stop",
+  "reboot": "Reboot",
+  "forceStopConfirm": "Force stop {name}? Unsaved data in the VM is lost.",
+  "@forceStopConfirm": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "parityDisks": "Parity",
+  "dataDisks": "Array disks",
+  "cachePools": "Pools",
+  "shares": "Shares",
+  "spunDown": "Spun down",
+  "diskErrors": "{count} errors",
+  "@diskErrors": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "startArray": "Start array",
+  "stopArray": "Stop array",
+  "stopArrayConfirm": "Stop the array? All Docker containers and VMs that use it will be stopped.",
+  "startArrayConfirm": "Start the array?",
+  "parityCheck": "Parity check",
+  "parityStart": "Start check",
+  "parityStartCorrecting": "Write corrections to parity",
+  "parityCancel": "Cancel check",
+  "free": "{free} free",
+  "@free": {
+    "placeholders": {
+      "free": {
+        "type": "String"
+      }
+    }
+  },
+  "unread": "Unread",
+  "archived": "Archive",
+  "archive": "Archive",
+  "archiveAll": "Archive all",
+  "notificationsEmpty": "No notifications",
+  "appearance": "Appearance",
+  "themeSystem": "System",
+  "themeLight": "Light",
+  "themeDark": "Dark",
+  "language": "Language",
+  "languageSystem": "System default",
+  "about": "About",
+  "aboutBody": "Open-source community app. Not affiliated with Lime Technology, Inc. Unraid is a trademark of Lime Technology, Inc.",
+  "sourceCode": "Source code",
+  "webGui": "Open WebGUI",
+  "errorUnsupported": "This server's Unraid API is too old. Update Unraid (7.2+) or the Unraid Connect plugin – API 4.29 or newer is required.",
+  "tryDemo": "Try the demo",
+  "tryDemoHelp": "Explore the app with sample data – no server needed.",
+  "demoBanner": "Demo mode – sample data"
+}
