@@ -62,10 +62,15 @@ class UnraidClient {
       sha256.convert(cert.der).toString();
 
   /// Runs a query or mutation and returns its `data` object.
+  ///
+  /// [timeout] overrides the client default for slow operations such as
+  /// container updates, which only return once the image is pulled.
   Future<Map<String, dynamic>> execute(
     String document, {
     Map<String, dynamic>? variables,
+    Duration? timeout,
   }) async {
+    final limit = timeout ?? this.timeout;
     final body = jsonEncode({
       'query': document,
       'variables': ?variables,
@@ -74,15 +79,15 @@ class UnraidClient {
     final HttpClientResponse response;
     final String text;
     try {
-      final request = await _http.postUrl(endpoint).timeout(timeout);
+      final request = await _http.postUrl(endpoint).timeout(limit);
       request.followRedirects = false;
       request.headers
         ..contentType = ContentType.json
         ..set(HttpHeaders.acceptHeader, 'application/json')
         ..set('x-api-key', apiKey);
       request.write(body);
-      response = await request.close().timeout(timeout);
-      text = await response.transform(utf8.decoder).join().timeout(timeout);
+      response = await request.close().timeout(limit);
+      text = await response.transform(utf8.decoder).join().timeout(limit);
     } on TimeoutException {
       throw UnraidApiException(ApiErrorKind.timeout, 'Server did not respond in time');
     } on HandshakeException catch (e) {

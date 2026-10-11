@@ -52,7 +52,8 @@ class AppLocalizationsEn extends AppLocalizations {
   String get servers => 'Servers';
 
   @override
-  String get readOnlyBanner => 'Read-only API key – actions are disabled.';
+  String get readOnlyBanner =>
+      'API key without Admin role – actions are disabled.';
 
   @override
   String get errorLoading => 'Could not load data';
@@ -62,7 +63,8 @@ class AppLocalizationsEn extends AppLocalizations {
       'The API key was rejected. Reconnect the server.';
 
   @override
-  String get errorForbidden => 'This API key is not allowed to do that.';
+  String get errorForbidden =>
+      'This API key is not allowed to do that. Actions need a key with the Admin role: edit the server and use “Sign in via WebGUI”.';
 
   @override
   String get errorNetwork =>

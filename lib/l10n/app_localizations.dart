@@ -185,7 +185,7 @@ abstract class AppLocalizations {
   /// No description provided for @readOnlyBanner.
   ///
   /// In en, this message translates to:
-  /// **'Read-only API key – actions are disabled.'**
+  /// **'API key without Admin role – actions are disabled.'**
   String get readOnlyBanner;
 
   /// No description provided for @errorLoading.
@@ -203,7 +203,7 @@ abstract class AppLocalizations {
   /// No description provided for @errorForbidden.
   ///
   /// In en, this message translates to:
-  /// **'This API key is not allowed to do that.'**
+  /// **'This API key is not allowed to do that. Actions need a key with the Admin role: edit the server and use “Sign in via WebGUI”.'**
   String get errorForbidden;
 
   /// No description provided for @errorNetwork.

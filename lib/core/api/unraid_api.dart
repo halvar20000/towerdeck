@@ -9,6 +9,9 @@ class UnraidApi {
 
   final UnraidClient client;
 
+  /// The server pulls the image before answering, which can take minutes.
+  static const updateTimeout = Duration(minutes: 10);
+
   // ---- Queries ------------------------------------------------------------
 
   /// Cheap call used to validate a connection; returns hostname and roles.
@@ -147,10 +150,12 @@ class UnraidApi {
   Future<void> updateContainer(String id) => client.execute(
         r'mutation($id: PrefixedID!) { docker { updateContainer(id: $id) { id } } }',
         variables: {'id': id},
+        timeout: updateTimeout,
       );
 
   Future<void> updateAllContainers() =>
-      client.execute('mutation { docker { updateAllContainers { id } } }');
+      client.execute('mutation { docker { updateAllContainers { id } } }',
+          timeout: updateTimeout * 4);
 
   Future<void> vmAction(String id, VmAction action) => client.execute(
         'mutation(\$id: PrefixedID!) { vm { ${action.name}(id: \$id) } }',

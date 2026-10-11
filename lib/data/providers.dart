@@ -147,8 +147,9 @@ final notificationsProvider =
   return ref.watch(apiProvider).notifications(archived: archived);
 });
 
-/// Roles of the API key. A key that only has VIEWER/GUEST cannot change
-/// anything, so the UI hides action buttons instead of failing on tap.
+/// Roles of the API key. Only ADMIN may change containers, VMs and the
+/// array (VIEWER, GUEST and CONNECT keys get "Forbidden resource"), so the UI
+/// hides action buttons instead of failing on tap.
 final rolesProvider = FutureProvider<List<String>>((ref) async {
   final probe = await ref.watch(apiProvider).probe();
   return probe.roles;
@@ -157,7 +158,7 @@ final rolesProvider = FutureProvider<List<String>>((ref) async {
 final readOnlyProvider = Provider<bool>((ref) {
   final roles = ref.watch(rolesProvider).value ?? const [];
   if (roles.isEmpty) return false; // custom permissions – let the server decide
-  return roles.every((r) => r == 'VIEWER' || r == 'GUEST');
+  return !roles.contains('ADMIN');
 });
 
 // ---------------------------------------------------------------------------

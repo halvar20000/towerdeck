@@ -12,7 +12,8 @@ class _RecordingClient extends UnraidClient {
   final docs = <Map<String, dynamic>>[];
 
   @override
-  Future<Map<String, dynamic>> execute(String document, {Map<String, dynamic>? variables}) async {
+  Future<Map<String, dynamic>> execute(String document,
+      {Map<String, dynamic>? variables, Duration? timeout}) async {
     docs.add({'document': document, 'variables': variables});
     return const {};
   }

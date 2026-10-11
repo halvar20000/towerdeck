@@ -53,7 +53,7 @@ class AppLocalizationsDe extends AppLocalizations {
 
   @override
   String get readOnlyBanner =>
-      'Nur-Lese-Schlüssel – Aktionen sind deaktiviert.';
+      'Schlüssel ohne Admin-Rolle – Aktionen sind deaktiviert.';
 
   @override
   String get errorLoading => 'Daten konnten nicht geladen werden';
@@ -63,7 +63,8 @@ class AppLocalizationsDe extends AppLocalizations {
       'Der API-Schlüssel wurde abgelehnt. Verbinde den Server neu.';
 
   @override
-  String get errorForbidden => 'Dieser API-Schlüssel darf das nicht.';
+  String get errorForbidden =>
+      'Dieser API-Schlüssel darf das nicht. Aktionen brauchen einen Schlüssel mit der Rolle Admin – bearbeite den Server und nutze „Über WebGUI anmelden“.';
 
   @override
   String get errorNetwork =>
