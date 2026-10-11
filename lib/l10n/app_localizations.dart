@@ -823,6 +823,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Demo mode – sample data'**
   String get demoBanner;
+
+  /// No description provided for @actionRunning.
+  ///
+  /// In en, this message translates to:
+  /// **'Working… this can take a few minutes.'**
+  String get actionRunning;
+
+  /// No description provided for @checkForUpdates.
+  ///
+  /// In en, this message translates to:
+  /// **'Check for updates'**
+  String get checkForUpdates;
 }
 
 class _AppLocalizationsDelegate

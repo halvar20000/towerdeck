@@ -209,6 +209,9 @@ class DemoApi extends UnraidApi {
   }
 
   @override
+  Future<void> checkForUpdates() => Future<void>.delayed(const Duration(seconds: 2));
+
+  @override
   Future<void> vmAction(String id, VmAction action) async {
     _vmState[id] = switch (action) {
       VmAction.stop || VmAction.forceStop => 'SHUTOFF',

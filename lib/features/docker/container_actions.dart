@@ -10,6 +10,11 @@ Future<void> stopContainer(BuildContext context, WidgetRef ref, DockerContainer 
   final l = context.l10n;
   if (!await confirm(context, l.stopConfirm(c.name), action: l.stop, destructive: true)) return;
   if (!context.mounted) return;
-  await runAction(context, ref, (api) => api.containerAction(c.id, ContainerAction.stop),
-      refresh: [containersProvider]);
+  await runAction(
+    context,
+    ref,
+    (api) => api.containerAction(c.id, ContainerAction.stop),
+    refresh: [containersProvider],
+    busyKey: containerBusyKey(c.id),
+  );
 }

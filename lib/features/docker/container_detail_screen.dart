@@ -27,7 +27,12 @@ class ContainerDetailScreen extends ConsumerWidget {
       child: Scaffold(
         appBar: AppBar(
           title: Text(c?.name ?? ''),
-          bottom: TabBar(tabs: [Tab(text: 'Info'), Tab(text: l.logs)]),
+          bottom: TabBar(
+            tabs: [
+              Tab(text: 'Info'),
+              Tab(text: l.logs),
+            ],
+          ),
         ),
         body: c == null
             ? AsyncBody(
@@ -50,11 +55,16 @@ class _InfoTab extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final l = context.l10n;
     final readOnly = ref.watch(readOnlyProvider);
+    final busy = isContainerBusy(ref.watch(busyProvider), c.id);
     final theme = Theme.of(context);
 
     Future<void> act(ContainerAction a) => runAction(
-        context, ref, (api) => api.containerAction(c.id, a),
-        refresh: [containersProvider]);
+      context,
+      ref,
+      (api) => api.containerAction(c.id, a),
+      refresh: [containersProvider],
+      busyKey: containerBusyKey(c.id),
+    );
 
     return ListView(
       padding: const EdgeInsets.all(16),
@@ -68,51 +78,71 @@ class _InfoTab extends ConsumerWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(c.name, style: theme.textTheme.titleLarge),
-                  Row(children: [
-                    StatusDot(c.running ? Health.good : c.paused ? Health.warning : Health.idle),
-                    const SizedBox(width: 6),
-                    Expanded(child: Text(c.status)),
-                  ]),
+                  Row(
+                    children: [
+                      StatusDot(
+                        c.running
+                            ? Health.good
+                            : c.paused
+                            ? Health.warning
+                            : Health.idle,
+                      ),
+                      const SizedBox(width: 6),
+                      Expanded(child: Text(c.status)),
+                    ],
+                  ),
                 ],
               ),
             ),
           ],
         ),
         const SizedBox(height: 16),
-        if (!readOnly)
+        if (!readOnly && busy)
+          const Padding(padding: EdgeInsets.symmetric(vertical: 20), child: LinearProgressIndicator()),
+        if (!readOnly && !busy)
           Wrap(
             spacing: 8,
             runSpacing: 8,
             children: [
               if (!c.running && !c.paused)
                 FilledButton.icon(
-                    onPressed: () => act(ContainerAction.start),
-                    icon: const Icon(Icons.play_arrow),
-                    label: Text(l.start)),
+                  onPressed: () => act(ContainerAction.start),
+                  icon: const Icon(Icons.play_arrow),
+                  label: Text(l.start),
+                ),
               if (c.paused)
                 FilledButton.icon(
-                    onPressed: () => act(ContainerAction.unpause),
-                    icon: const Icon(Icons.play_arrow),
-                    label: Text(l.resume)),
+                  onPressed: () => act(ContainerAction.unpause),
+                  icon: const Icon(Icons.play_arrow),
+                  label: Text(l.resume),
+                ),
               if (c.running) ...[
                 FilledButton.tonalIcon(
-                    onPressed: () => stopContainer(context, ref, c),
-                    icon: const Icon(Icons.stop),
-                    label: Text(l.stop)),
+                  onPressed: () => stopContainer(context, ref, c),
+                  icon: const Icon(Icons.stop),
+                  label: Text(l.stop),
+                ),
                 FilledButton.tonalIcon(
-                    onPressed: () => act(ContainerAction.restart),
-                    icon: const Icon(Icons.restart_alt),
-                    label: Text(l.restart)),
+                  onPressed: () => act(ContainerAction.restart),
+                  icon: const Icon(Icons.restart_alt),
+                  label: Text(l.restart),
+                ),
                 OutlinedButton.icon(
-                    onPressed: () => act(ContainerAction.pause),
-                    icon: const Icon(Icons.pause),
-                    label: Text(l.pause)),
+                  onPressed: () => act(ContainerAction.pause),
+                  icon: const Icon(Icons.pause),
+                  label: Text(l.pause),
+                ),
               ],
               if (c.updateAvailable)
                 FilledButton.icon(
                   style: FilledButton.styleFrom(backgroundColor: Colors.orange),
-                  onPressed: () => runAction(context, ref, (api) => api.updateContainer(c.id),
-                      refresh: [containersProvider]),
+                  onPressed: () => runAction(
+                    context,
+                    ref,
+                    (api) => api.updateContainer(c.id),
+                    refresh: [containersProvider],
+                    busyKey: containerBusyKey(c.id),
+                  ),
                   icon: const Icon(Icons.system_update_alt),
                   label: Text(l.update),
                 ),
@@ -148,10 +178,7 @@ class _InfoTab extends ConsumerWidget {
                   trailing: const Icon(Icons.upgrade, color: Colors.orange),
                 ),
               if (c.ports.isNotEmpty)
-                ListTile(
-                  title: Text(l.ports),
-                  subtitle: Text(c.ports.map((p) => p.toString()).toSet().join('\n')),
-                ),
+                ListTile(title: Text(l.ports), subtitle: Text(c.ports.map((p) => p.toString()).toSet().join('\n'))),
             ],
           ),
         ),
@@ -182,14 +209,16 @@ class _LogsTab extends ConsumerWidget {
           itemBuilder: (context, i) {
             final line = lines[lines.length - 1 - i];
             return SelectableText.rich(
-              TextSpan(children: [
-                if (line.timestamp != null)
-                  TextSpan(
-                    text: '${time.format(line.timestamp!)}  ',
-                    style: TextStyle(color: Theme.of(context).colorScheme.outline),
-                  ),
-                TextSpan(text: line.message),
-              ]),
+              TextSpan(
+                children: [
+                  if (line.timestamp != null)
+                    TextSpan(
+                      text: '${time.format(line.timestamp!)}  ',
+                      style: TextStyle(color: Theme.of(context).colorScheme.outline),
+                    ),
+                  TextSpan(text: line.message),
+                ],
+              ),
               style: const TextStyle(fontFamily: 'monospace', fontSize: 12),
             );
           },

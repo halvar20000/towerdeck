@@ -205,3 +205,28 @@ class SettingsNotifier extends Notifier<AppSettings> {
 }
 
 final settingsProvider = NotifierProvider<SettingsNotifier, AppSettings>(SettingsNotifier.new);
+
+/// Keys of actions that are still running (e.g. `container:<id>`), so the
+/// UI can show progress and ignore repeated taps. Unraid runs every request
+/// it gets, and parallel updates of one container leave it stopped.
+class BusyNotifier extends Notifier<Set<String>> {
+  @override
+  Set<String> build() => const {};
+
+  bool tryStart(String key) {
+    if (state.contains(key)) return false;
+    state = {...state, key};
+    return true;
+  }
+
+  void finish(String key) => state = {...state}..remove(key);
+}
+
+final busyProvider = NotifierProvider<BusyNotifier, Set<String>>(BusyNotifier.new);
+
+/// Busy key for actions on one container. Update-all blocks all of them.
+String containerBusyKey(String id) => 'container:$id';
+const updateAllBusyKey = 'update-all';
+
+bool isContainerBusy(Set<String> busy, String id) =>
+    busy.contains(containerBusyKey(id)) || busy.contains(updateAllBusyKey);

@@ -231,5 +231,7 @@
   "errorUnsupported": "This server's Unraid API is too old. Update Unraid (7.2+) or the Unraid Connect plugin – API 4.29 or newer is required.",
   "tryDemo": "Try the demo",
   "tryDemoHelp": "Explore the app with sample data – no server needed.",
-  "demoBanner": "Demo mode – sample data"
+  "demoBanner": "Demo mode – sample data",
+  "actionRunning": "Working… this can take a few minutes.",
+  "checkForUpdates": "Check for updates"
 }

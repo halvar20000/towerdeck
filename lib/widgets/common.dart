@@ -29,12 +29,7 @@ String describeError(BuildContext context, Object error) {
 /// Renders an [AsyncValue] with consistent loading / error states and
 /// pull-to-refresh. Data stays visible while a background poll is running.
 class AsyncBody<T> extends StatelessWidget {
-  const AsyncBody({
-    super.key,
-    required this.value,
-    required this.onRefresh,
-    required this.builder,
-  });
+  const AsyncBody({super.key, required this.value, required this.onRefresh, required this.builder});
 
   final AsyncValue<T> value;
   final Future<void> Function() onRefresh;
@@ -53,8 +48,11 @@ class AsyncBody<T> extends StatelessWidget {
             const SizedBox(height: 48),
             Icon(Icons.cloud_off, size: 56, color: Theme.of(context).colorScheme.error),
             const SizedBox(height: 16),
-            Text(context.l10n.errorLoading,
-                textAlign: TextAlign.center, style: Theme.of(context).textTheme.titleMedium),
+            Text(
+              context.l10n.errorLoading,
+              textAlign: TextAlign.center,
+              style: Theme.of(context).textTheme.titleMedium,
+            ),
             const SizedBox(height: 8),
             Text(describeError(context, error), textAlign: TextAlign.center),
             const SizedBox(height: 24),
@@ -75,18 +73,29 @@ Future<bool> runAction(
   Future<void> Function(UnraidApi api) action, {
   List<ProviderOrFamily> refresh = const [],
   String? successMessage,
+  String? busyKey,
 }) async {
   final messenger = ScaffoldMessenger.of(context);
   final l = context.l10n;
+  final busy = ref.read(busyProvider.notifier);
+  if (busyKey != null) {
+    if (!busy.tryStart(busyKey)) return false;
+    messenger.showSnackBar(SnackBar(content: Text(l.actionRunning), duration: const Duration(minutes: 30)));
+  }
   String failText(Object e) => l.actionFailed(describeError(context, e));
   try {
     await action(ref.read(apiProvider));
-    messenger.showSnackBar(SnackBar(content: Text(successMessage ?? l.actionDone)));
+    messenger
+      ..hideCurrentSnackBar()
+      ..showSnackBar(SnackBar(content: Text(successMessage ?? l.actionDone)));
     return true;
   } catch (e) {
-    messenger.showSnackBar(SnackBar(content: Text(failText(e))));
+    messenger
+      ..hideCurrentSnackBar()
+      ..showSnackBar(SnackBar(content: Text(failText(e))));
     return false;
   } finally {
+    if (busyKey != null) busy.finish(busyKey);
     for (final p in refresh) {
       ref.invalidate(p);
     }
@@ -102,9 +111,7 @@ Future<bool> confirm(BuildContext context, String message, {String? action, bool
       actions: [
         TextButton(onPressed: () => Navigator.pop(context, false), child: Text(l.cancel)),
         FilledButton(
-          style: destructive
-              ? FilledButton.styleFrom(backgroundColor: Theme.of(context).colorScheme.error)
-              : null,
+          style: destructive ? FilledButton.styleFrom(backgroundColor: Theme.of(context).colorScheme.error) : null,
           onPressed: () => Navigator.pop(context, true),
           child: Text(action ?? l.confirm),
         ),
@@ -127,8 +134,8 @@ class UsageBar extends StatelessWidget {
     final color = f > 0.9
         ? scheme.error
         : f > 0.75
-            ? Colors.orange
-            : scheme.primary;
+        ? Colors.orange
+        : scheme.primary;
     return ClipRRect(
       borderRadius: BorderRadius.circular(height / 2),
       child: LinearProgressIndicator(
@@ -178,11 +185,11 @@ class SectionHeader extends StatelessWidget {
       child: Row(
         children: [
           Expanded(
-            child: Text(title.toUpperCase(),
-                style: Theme.of(context).textTheme.labelMedium?.copyWith(
-                      color: Theme.of(context).colorScheme.primary,
-                      letterSpacing: 1.1,
-                    )),
+            child: Text(
+              title.toUpperCase(),
+              style: Theme.of(context).textTheme.labelMedium
+                  ?.copyWith(color: Theme.of(context).colorScheme.primary, letterSpacing: 1.1),
+            ),
           ),
           ?trailing,
         ],

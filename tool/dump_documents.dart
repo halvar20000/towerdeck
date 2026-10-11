@@ -40,6 +40,7 @@ Future<void> main() async {
   }
   await run(() => api.updateContainer('x'));
   await run(api.updateAllContainers);
+  await run(api.checkForUpdates);
   for (final a in VmAction.values) {
     await run(() => api.vmAction('x', a));
   }

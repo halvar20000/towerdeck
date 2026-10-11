@@ -157,6 +157,14 @@ class UnraidApi {
       client.execute('mutation { docker { updateAllContainers { id } } }',
           timeout: updateTimeout * 4);
 
+  /// Re-checks every image against its registry (the WebGUI's "Check for
+  /// Updates"). Unraid rewrites its update cache after a container update,
+  /// so until this runs other containers report an unknown status.
+  Future<void> checkForUpdates() => client.execute(
+        'mutation { refreshDockerDigests }',
+        timeout: updateTimeout,
+      );
+
   Future<void> vmAction(String id, VmAction action) => client.execute(
         'mutation(\$id: PrefixedID!) { vm { ${action.name}(id: \$id) } }',
         variables: {'id': id},

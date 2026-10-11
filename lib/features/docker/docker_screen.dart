@@ -28,20 +28,43 @@ class _DockerScreenState extends ConsumerState<DockerScreen> {
     final value = ref.watch(containersProvider);
     final readOnly = ref.watch(readOnlyProvider);
     final updates = value.value?.where((c) => c.updateAvailable).length ?? 0;
+    final updatingAll = ref.watch(busyProvider).contains(updateAllBusyKey);
 
     return Scaffold(
       appBar: ServerAppBar(
         actions: [
-          if (updates > 0 && !readOnly)
+          if (updatingAll)
+            const Padding(
+              padding: EdgeInsets.all(14),
+              child: SizedBox.square(dimension: 20, child: CircularProgressIndicator(strokeWidth: 2)),
+            )
+          else if (updates > 0 && !readOnly)
             IconButton(
               tooltip: l.updateAll,
               icon: Badge(label: Text('$updates'), child: const Icon(Icons.system_update_alt)),
               onPressed: () async {
                 if (!await confirm(context, l.updateAllConfirm, action: l.updateAll)) return;
                 if (!context.mounted) return;
-                await runAction(context, ref, (api) => api.updateAllContainers(),
-                    refresh: [containersProvider]);
+                await runAction(
+                  context,
+                  ref,
+                  (api) => api.updateAllContainers(),
+                  refresh: [containersProvider],
+                  busyKey: updateAllBusyKey,
+                );
               },
+            ),
+          if (!readOnly)
+            IconButton(
+              tooltip: l.checkForUpdates,
+              icon: const Icon(Icons.update),
+              onPressed: () => runAction(
+                context,
+                ref,
+                (api) => api.checkForUpdates(),
+                refresh: [containersProvider],
+                busyKey: 'check-updates',
+              ),
             ),
         ],
         bottom: PreferredSize(
@@ -109,12 +132,20 @@ class _ContainerTile extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final l = context.l10n;
+    final busy = isContainerBusy(ref.watch(busyProvider), c.id);
     return ListTile(
       leading: ContainerIcon(c),
       title: Text(c.name, maxLines: 1, overflow: TextOverflow.ellipsis),
       subtitle: Row(
         children: [
-          StatusDot(c.running ? Health.good : c.paused ? Health.warning : Health.idle, size: 8),
+          StatusDot(
+            c.running
+                ? Health.good
+                : c.paused
+                ? Health.warning
+                : Health.idle,
+            size: 8,
+          ),
           const SizedBox(width: 6),
           Expanded(child: Text(c.status, maxLines: 1, overflow: TextOverflow.ellipsis)),
           if (c.updateAvailable)
@@ -126,14 +157,20 @@ class _ContainerTile extends ConsumerWidget {
       ),
       trailing: readOnly
           ? null
+          : busy
+          ? const SizedBox.square(dimension: 24, child: CircularProgressIndicator(strokeWidth: 2))
           : IconButton(
               tooltip: c.running ? l.stop : l.start,
               icon: Icon(c.running ? Icons.stop_circle_outlined : Icons.play_circle_outline),
               onPressed: () => c.running
                   ? stopContainer(context, ref, c)
-                  : runAction(context, ref,
+                  : runAction(
+                      context,
+                      ref,
                       (api) => api.containerAction(c.id, c.paused ? ContainerAction.unpause : ContainerAction.start),
-                      refresh: [containersProvider]),
+                      refresh: [containersProvider],
+                      busyKey: containerBusyKey(c.id),
+                    ),
             ),
       onTap: () => context.push('/docker/${Uri.encodeComponent(c.id)}'),
     );
@@ -148,10 +185,7 @@ class ContainerIcon extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final fallback = CircleAvatar(
-      radius: size / 2,
-      child: Text(c.name.isEmpty ? '?' : c.name[0].toUpperCase()),
-    );
+    final fallback = CircleAvatar(radius: size / 2, child: Text(c.name.isEmpty ? '?' : c.name[0].toUpperCase()));
     if (c.iconUrl == null) return fallback;
     return ClipRRect(
       borderRadius: BorderRadius.circular(8),

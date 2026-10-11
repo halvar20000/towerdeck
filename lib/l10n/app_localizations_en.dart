@@ -421,4 +421,10 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get demoBanner => 'Demo mode – sample data';
+
+  @override
+  String get actionRunning => 'Working… this can take a few minutes.';
+
+  @override
+  String get checkForUpdates => 'Check for updates';
 }
